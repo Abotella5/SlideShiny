@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Body Mass Index, Body Fat Percentage and Ideal Weight</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Body Mass Index, Body Fat Percentage and Ideal Weight">
+  <meta name="author" content="Alvaro Botella">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Body Mass Index, Body Fat Percentage and Ideal Weight</h1>
+    <h2></h2>
+    <p>Alvaro Botella<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Defined overweight and obesity as an excess of body fat, the measure most used for diagnose them is the Body Mass Index (BMI). But, this measure underestimates the prevalence of overweight and obesity. It has been suggested that the Body Fat Percentage (BFP) is most util indicator to estimate the overweight and obesity, and thereby, prevent the health risk associated.</p>
+
+<p>This application calculate the BMI (weight and height based) and the estimated BFP (BMI, gender and age based), and plotting each in a nutritional category graphic.</p>
+
+<p>The BMI nutritional category has been obtained from <a href="http://www.euro.who.int/en/health-topics/disease-prevention/nutrition/a-healthy-lifestyle/body-mass-index-bmi">WHO-Europe nutritional page web</a>.And the formula for calculate BFP and the cutoff for BFP, and other related consults: <a href="http://www.nature.com/ijo/journal/v36/n2/full/ijo2011100a.html">Gomez-Ambrosi, J.,et. al.</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>ui.R File (sidebar panel)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We need height and weight to calculate BMI ( \(BMI=\frac{weight}{height^2}\) ). And BMI, age and gender to calculate BFP</p>
+
+<p>We collect these data using the folowing widgets:</p>
+
+<ul>
+<li>Numeric input (age and height). </li>
+</ul>
+
+<pre><code class="r">numericInput(&quot;age&quot;, label = &quot;Type your age in years&quot;,value = 0)
+</code></pre>
+
+<ul>
+<li>Select box (gender). </li>
+</ul>
+
+<pre><code class="r">selectInput(&quot;sex&quot;, label = &quot;Select your gender&quot;, choices = list(&quot;Male&quot; = 0, &quot;Female&quot; = 1), selected = 1)
+</code></pre>
+
+<ul>
+<li>slider (weight) </li>
+</ul>
+
+<pre><code class="r">sliderInput(&quot;weight&quot;, label = &quot;Select your weight in Kg.&quot;, min = 30, max = 120, value = 65)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>ui.R File (main panel)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We display the results subdivided the user interface into two sections (tabset mode). A section contain the intructions, an another the results. The instructions section is made inserting a markdown file. We show the code below.</p>
+
+<pre><code class="r">mainPanel(
+        tabsetPanel(
+                tabPanel (&quot;Instructions&quot;, 
+                                includeMarkdown(&quot;text.md&quot;)),                    
+                tabPanel (&quot;Results&quot;,
+                        textOutput(&quot;text1&quot;),              
+                        plotOutput (&quot;PlotBMI&quot;),
+                        br(),
+                        br(),
+                        textOutput (&quot;text2&quot;),  
+                        plotOutput (&quot;PlotBFP&quot;))
+                )
+        )
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Results, an example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The complete code is in <a href="http://github.com/Abotella5/shareshinycode/tree/master/appShiny">github</a>. We show the BMI and BFP text format, and a plot example here:</p>
+
+<pre><code>## [1] &quot;Your BMI is: 24.5&quot;
+</code></pre>
+
+<pre><code>## [1] &quot;Your BFP is: 24.2111775&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>The plot</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">barplot(as.matrix(table(dat$categoryMal)), col= c(&quot;lightyellow&quot;, &quot;lightgreen&quot;, &quot;lightsalmon&quot;, &quot;lightcoral&quot;), beside = FALSE, axes = FALSE, 
+   main=&quot;Your Nutritional Status by BFP (MALES)&quot;, ylab = &quot;BFP&quot;)
+ axis(side = 2, at = c(0, 100, 200, 300, 400, 500),labels = c(&quot;0&quot;, &quot;10&quot;, &quot;20&quot;, &quot;30&quot;, &quot;40&quot;, &quot;50&quot;))
+ text (x=0.7, y=25, &quot;Underweight&quot;); text (x=0.7, y=130, &quot;Normal weight&quot;)
+ text (x=0.7, y=225, &quot;Overweight&quot;); text (x=0.7, y=335, &quot;Obesity&quot;)
+abline (h=BFP*10, col=&quot;red&quot;, lwd=2)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-6.png" alt="plot of chunk unnamed-chunk-6"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='ui.R File (sidebar panel)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='ui.R File (main panel)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Results, an example'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='The plot'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
